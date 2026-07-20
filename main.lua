@@ -733,7 +733,7 @@ AccountAgeLabel.TextSize = 11
 AccountAgeLabel.TextColor3 = Color3.fromRGB(170, 175, 185)
 AccountAgeLabel.TextXAlignment = Enum.TextXAlignment.Left
 AccountAgeLabel.BackgroundTransparency = 1
-AccountAgeLabel.Parent = Profilecard
+AccountAgeLabel.Parent = ProfileCard
 
 
 --TARJETA DE RENDIMIENTO  -
