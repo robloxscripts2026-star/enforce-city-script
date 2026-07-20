@@ -25,6 +25,8 @@ local Config = {
     HideAimMenu = false,     
     
     ESPBox = false, ESPName = false, ESPDist = false, ESPHealth = false, Traces = false
+    
+    LockUI = false
 }
 
 
@@ -921,7 +923,7 @@ AddToggle(TabVisuals, "Traces", "Traces", Theme.Visuals)
 
 AddButton(TabMisc, "Server Hop", Theme.Misc)
 AddButton(TabMisc, "Rejoin Server", Theme.Misc)
-
+AddToggle(TabMisc, "Bloquear Menú🌪️", "LockUI", Theme.Misc)
 
 -- SISTEMA  ESP 
 
@@ -1148,28 +1150,36 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
--- 3. CONTROL  FLY
-local FlyGyro, FlyVelocity
+--  CONTROL FLY
+local FlyAttachment, AlignOri, LinearVel
+
 RunService.RenderStepped:Connect(function()
     if Config.Fly and Character and RootPart and Humanoid then
-        -- 
-        if not FlyGyro or not FlyGyro.Parent then
-            FlyGyro = Instance.new("BodyGyro")
-            FlyGyro.Name = "EnforceFlyGyro"
-            FlyGyro.P = 9e4
-            FlyGyro.maxTorque = Vector3.new(9e9, 9e9, 9e9)
-            FlyGyro.Parent = RootPart
-        end
-        
-        if not FlyVelocity or not FlyVelocity.Parent then
-            FlyVelocity = Instance.new("BodyVelocity")
-            FlyVelocity.Name = "EnforceFlyVelocity"
-            FlyVelocity.maxForce = Vector3.new(9e9, 9e9, 9e9)
-            FlyVelocity.Parent = RootPart
+
+        if not FlyAttachment or not FlyAttachment.Parent then
+            FlyAttachment = Instance.new("Attachment")
+            FlyAttachment.Name = "EnforceFlyAttachment"
+            FlyAttachment.Parent = RootPart
+            
+            AlignOri = Instance.new("AlignOrientation")
+            AlignOri.Name = "EnforceFlyAlign"
+            AlignOri.Mode = Enum.OrientationAlignmentMode.OneAttachment
+            AlignOri.Attachment0 = FlyAttachment
+            AlignOri.MaxTorque = 9e9
+            AlignOri.Responsiveness = 200 
+            AlignOri.Parent = RootPart
+            
+            LinearVel = Instance.new("LinearVelocity")
+            LinearVel.Name = "EnforceFlyVelocity"
+            LinearVel.Attachment0 = FlyAttachment
+            LinearVel.MaxForce = 9e9
+            LinearVel.VelocityConstraintMode = Enum.VelocityConstraintMode.Vector
+            LinearVel.Parent = RootPart
         end
         
         local camera = workspace.CurrentCamera
-        FlyGyro.CFrame = camera.CFrame
+        
+        AlignOri.CFrame = camera.CFrame
         
         local moveDirection = Humanoid.MoveDirection
         if moveDirection.Magnitude > 0 then
@@ -1177,26 +1187,22 @@ RunService.RenderStepped:Connect(function()
             local lookVector = camera.CFrame.LookVector
             local targetVelocity = moveDirection * 50 
             
-            
-            if lookVector.Y > 0.2 then
-                targetVelocity = targetVelocity + Vector3.new(0, lookVector.Y * 40, 0)
-            elseif lookVector.Y < -0.2 then
+            if lookVector.Y > 0.2 or lookVector.Y < -0.2 then
                 targetVelocity = targetVelocity + Vector3.new(0, lookVector.Y * 40, 0)
             end
             
-            FlyVelocity.velocity = targetVelocity
+            LinearVel.VectorVelocity = targetVelocity
         else
-            
-            FlyVelocity.velocity = Vector3.new(0, 0, 0)
+            LinearVel.VectorVelocity = Vector3.new(0, 0, 0)
         end
     else
-    
-        if RootPart:FindFirstChild("EnforceFlyGyro") then RootPart.EnforceFlyGyro:Destroy() end
+        if RootPart:FindFirstChild("EnforceFlyAttachment") then RootPart.EnforceFlyAttachment:Destroy() end
+        if RootPart:FindFirstChild("EnforceFlyAlign") then RootPart.EnforceFlyAlign:Destroy() end
         if RootPart:FindFirstChild("EnforceFlyVelocity") then RootPart.EnforceFlyVelocity:Destroy() end
-        FlyGyro = nil
-        FlyVelocity = nil
+        FlyAttachment, AlignOri, LinearVel = nil, nil, nil
     end
 end)
+
 
 --  NOCLIP 
 RunService.Stepped:Connect(function()
