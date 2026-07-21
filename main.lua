@@ -24,7 +24,7 @@ local Config = {
     AimPart = "Head",         
     HideAimMenu = false,     
     
-    ESPBox = false, ESPName = false, ESPDist = false, ESPHealth = false, Traces = false
+    ESPBox = false, ESPName = false, ESPDist = false, ESPHealth = false, Traces = false,
     
     LockUI = false
 }
