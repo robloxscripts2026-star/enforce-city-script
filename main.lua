@@ -18,11 +18,7 @@ end)
 -- Configuración de Estado General
 local Config = {
     SpeedValue = 16, SpeedEnabled = false, InfJump = false, Noclip = false, Fly = false,
-    SilentAim = false, FOVEnabled = false, FOVRadius = 100,
-    
-    AimbotEnabled = false,
-    AimPart = "Head",         
-    HideAimMenu = false,     
+    SilentAim = false, FOVEnabled = false, FOVRadius = 100,     
     
     ESPBox = false, ESPName = false, ESPDist = false, ESPHealth = false, Traces = false,
     
@@ -915,6 +911,10 @@ AddSlider(TabCombat, "FOV Radio", 30, 300, 100, "FOVRadius", Theme.Combat)
 AddToggle(TabCombat, "Show FOV Anillo", "FOVEnabled", Theme.Combat)
 AddToggle(TabCombat, "Silent Aim", "SilentAim", Theme.Combat)
 
+
+--AQUI PONES LA LÓGICA DEL AIMBOT Y FOV🗣️🔥🔥🔥🔥🔥
+
+
 AddToggle(TabVisuals, "ESP Box", "ESPBox", Theme.Visuals)
 AddToggle(TabVisuals, "ESP Name", "ESPName", Theme.Visuals)
 AddToggle(TabVisuals, "ESP Distancia", "ESPDist", Theme.Visuals)
@@ -925,6 +925,8 @@ AddButton(TabMisc, "Server Hop", Theme.Misc)
 AddButton(TabMisc, "Rejoin Server", Theme.Misc)
 AddToggle(TabMisc, "Bloquear Menú🌪️", "LockUI", Theme.Misc)
 
+
+--el lock UI no lo termine ni server hop y rejoin  
 -- SISTEMA  ESP 
 
 local function CreateESP(player)
@@ -1119,7 +1121,6 @@ LocalPlayer.CharacterAdded:Connect(function(char)
     RootPart = char:WaitForChild("HumanoidRootPart")
 end)
 
---  BYPASS ANTI-DETECCIÓN 🔥
 task.spawn(function()
     while task.wait(0.1) do
         if Character and Humanoid and RootPart then
